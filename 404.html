@@ -1,60 +1,30 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bakım Modu | Meridyen Elektrik</title>
+    <title>Meridyen Elektrik | İstanbul Teknik Servis & Arıza Onarım</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Sora:wght@800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        display: ['Sora', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            bg: '#050507',
-                            accent: '#EAB308',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="İstanbul genelinde 7/24 profesyonel elektrik teknik servisi. 20 yıllık tecrübemizle arıza onarım, pano yenileme ve tesisat hizmetleri sunuyoruz.">
+    <meta name="keywords" content="elektrikçi, istanbul elektrikçi, nöbetçi elektrikçi, elektrik arıza, sigorta tamiri, meridyen elektrik">
+    
     <style>
-        body { background-color: #050507; color: #F8FAFC; overflow: hidden; }
-        .bg-text { position: absolute; font-family: 'Sora'; font-weight: 800; color: rgba(255,255,255,0.02); pointer-events: none; z-index: 0; text-transform: uppercase; white-space: nowrap; line-height: 1; }
-        .reveal { opacity: 0; transform: translateY(20px); animation: reveal 1s forwards ease-out; }
-        @keyframes reveal { to { opacity: 1; transform: translateY(0); } }
+        /* Base loading state to prevent flash of unstyled content */
+        body { background-color: #FAFAFA; margin: 0; padding: 0; }
+        #app { min-height: 100vh; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    
-    <div class="bg-text top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] select-none">Bakım</div>
+<body class="antialiased">
 
-    <div class="container mx-auto px-6 relative z-10 text-center reveal">
-        <img src="./logo.png" alt="Meridyen Elektrik" class="h-12 mx-auto mb-16 brightness-0 invert opacity-50">
-        
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-accent/5 border border-brand-accent/20 rounded-full text-brand-accent text-[10px] font-bold uppercase tracking-[0.4em] mb-10">
-            Sistem Güncellemesi
-        </div>
-        
-        <h1 class="font-display text-5xl md:text-7xl font-extrabold leading-none mb-8 tracking-tighter uppercase">
-            SİTEMİZ <br><span class="text-brand-accent italic font-normal">BAKIMDADIR.</span>
-        </h1>
-        
-        <p class="text-xl text-slate-500 max-w-xl mx-auto leading-relaxed font-light mb-16">
-            Sizlere daha iyi bir deneyim sunabilmek için web sitemizi yeniliyoruz. Çok yakında profesyonel yüzümüzle tekrar buradayız.
-        </p>
+    <!-- The Entire Application Renders Here -->
+    <div id="app"></div>
 
-        <div class="flex flex-col items-center gap-6">
-            <p class="text-[10px] font-bold uppercase tracking-[0.5em] text-slate-700">Acil Durumlar İçin</p>
-            <a href="tel:+905323181279" class="text-3xl font-extrabold text-white hover:text-brand-accent transition-colors">0532 318 12 79</a>
-        </div>
-    </div>
+    <!-- Core Application Logic -->
+    <script src="js/scripts.js"></script>
 
 </body>
 </html>

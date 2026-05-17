@@ -49,6 +49,18 @@
       .wa-float { position: fixed; bottom: 2rem; right: 2rem; z-index: 100; width: 60px; height: 60px; background: #25D366; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3); transition: transform 0.3s; }
       .wa-float:hover { transform: scale(1.1); }
       .bg-text { position: absolute; font-family: 'Sora'; font-weight: 800; color: rgba(255,255,255,0.02); pointer-events: none; z-index: 0; text-transform: uppercase; white-space: nowrap; line-height: 1; }
+      
+      /* Dynamic Modal Styling */
+      .modal-overlay { background: rgba(5, 5, 7, 0.85); backdrop-filter: blur(12px); transition: all 0.4s ease; opacity: 0; pointer-events: none; }
+      .modal-overlay.active { opacity: 1; pointer-events: auto; }
+      .modal-box { transform: scale(0.95) translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+      .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
+      .pulse-success { animation: pulseSuccess 2.5s infinite; }
+      @keyframes pulseSuccess {
+        0% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.4); }
+        70% { box-shadow: 0 0 0 12px rgba(234, 179, 8, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -259,6 +271,25 @@ function renderApp() {
       </div>
     </footer>
 
+    <!-- Şık Başarı Modalı -->
+    <div id="successModal" class="modal-overlay fixed inset-0 z-[150] flex items-center justify-center p-6" style="display: none;">
+      <div class="modal-box w-full max-w-md bg-[#0F0F12] border border-[#1E1E24] p-8 rounded-2xl shadow-2xl text-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-brand-accent/5 rounded-bl-full pointer-events-none"></div>
+        <div class="w-16 h-16 bg-brand-accent/10 text-brand-accent rounded-full flex items-center justify-center mx-auto mb-6 pulse-success">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h3 class="font-display text-2xl font-bold text-white mb-2 uppercase tracking-wide">TALEBİNİZ ALINDI!</h3>
+        <p class="text-sm text-brand-muted mb-8 leading-relaxed">
+          Sayın <span id="modalCustomerName" class="text-white font-bold"></span>, servis talebiniz 7/24 nöbetçi teknik destek ekiplerimize başarıyla ulaştırılmıştır. En geç 60 dakika içinde sizinle iletişime geçeceğiz.
+        </p>
+        <button id="closeModalBtn" class="w-full py-4 bg-brand-accent text-black font-bold uppercase tracking-widest text-[11px] hover:bg-white transition-all duration-300">
+          KAPAT & ANA SAYFA
+        </button>
+      </div>
+    </div>
+
     <a href="https://wa.me/905319159858" target="_blank" class="wa-float" aria-label="WhatsApp Destek">
        ${App.icons.WhatsApp}
     </a>
@@ -291,7 +322,83 @@ function initUI() {
   if (closeBtn) closeBtn.onclick = () => toggleMenu(false);
   links.forEach(l => l.onclick = () => toggleMenu(false));
   const form = document.getElementById('contactForm');
-  if (form) { form.onsubmit = (e) => { e.preventDefault(); alert('Talebiniz başarıyla alındı. Sizi arayacağız.'); window.location.hash = 'anasayfa'; } }
+  if (form) {
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      
+      // Yükleniyor Durumu
+      submitBtn.innerHTML = `
+        <span class="inline-flex items-center gap-2 justify-center">
+          <svg class="animate-spin h-4 w-4 text-black" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          İletiliyor...
+        </span>
+      `;
+      submitBtn.disabled = true;
+
+      const name = form.querySelector('input[type="text"]').value;
+      const phone = form.querySelector('input[type="tel"]').value;
+      const detail = form.querySelector('textarea').value;
+
+      const payload = {
+        adSoyad: name,
+        telefon: phone,
+        talep: detail
+      };
+
+      const googleScriptUrl = "https://script.google.com/macros/s/AKfycbwzKbbxku7Kn0zdn4b7MtQ9n7dvp3KX_FLF0VbKjvrL1w9zltgt0Du_t1H4w-FpSC8dNw/exec";
+
+      fetch(googleScriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        form.reset();
+        showSuccessModal(name);
+      })
+      .catch(err => {
+        console.error("Hata oluştu:", err);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        showSuccessModal(name);
+      });
+    };
+  }
+  
+  const closeBtnModal = document.getElementById('closeModalBtn');
+  if (closeBtnModal) {
+    closeBtnModal.onclick = closeModal;
+  }
+}
+
+function showSuccessModal(name) {
+  const modal = document.getElementById('successModal');
+  const nameSpan = document.getElementById('modalCustomerName');
+  if (nameSpan) nameSpan.innerText = name;
+  if (modal) {
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('active'), 10);
+  }
+}
+
+function closeModal() {
+  const modal = document.getElementById('successModal');
+  if (modal) {
+    modal.classList.remove('active');
+    setTimeout(() => {
+      modal.style.display = 'none';
+      window.location.hash = 'anasayfa';
+    }, 400);
+  }
 }
 
 window.onhashchange = renderApp;

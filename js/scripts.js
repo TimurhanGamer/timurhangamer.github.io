@@ -189,7 +189,7 @@ const Templates = {
             <div class="p-12 bg-brand-surface border border-brand-border rounded-2xl hover:border-brand-accent transition-all group">
                <div class="w-14 h-14 bg-brand-bg rounded-full flex items-center justify-center text-brand-accent mb-10 group-hover:bg-brand-accent group-hover:text-black transition-all">${App.icons.Mail.replace('w-5 h-5', 'w-8 h-8')}</div>
                <h4 class="text-white text-lg font-bold mb-4 uppercase tracking-widest">E-Posta Hattı</h4>
-               <a href="mailto:info@meridyenelektrik.com" class="text-xl font-bold text-white block mb-2 truncate">info@meridyenelektrik.com</a>
+               <a href="mailto:info@meridyenelektrik.com.tr" class="text-xl font-bold text-white block mb-2 truncate">info@meridyenelektrik.com.tr</a>
                <p class="text-brand-muted text-xs uppercase tracking-widest">Teklif & İş Birliği</p>
             </div>
           </div>
